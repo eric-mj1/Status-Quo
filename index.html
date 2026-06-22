@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Status Quo</title>
+</head>
+<body>
+    <h1>Status Quo</h1>
+    <form method="POST">
+        <label for="url">Enter URL:</label>
+        <input type="text" id="url" name="url" required>
+        <button type="submit">Check</button>
+    </form>
+
+    {% if result %}
+    <hr>
+    <pre>
+    {{ result }}
+    </pre>
+    {% endif %}
+
+</body>
+</html>
