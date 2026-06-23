@@ -1,5 +1,7 @@
 from urllib.parse import urlparse
 import requests
+import whois
+from datetime import datetime, timezone
 
 def check_url(url):
     if not url.startswith(("http://", "https://")): # for people who are lazy (like me) to add the https
@@ -20,3 +22,48 @@ def check_website(url):
     
     except requests.exceptions.RequestException as e:
         return {"Error": str(e)}
+    
+def get_whois_info(domain):
+    try:
+        info = whois.whois(domain)
+
+        creation = info.creation_date
+        expiration = info.expiration_date
+
+        if isinstance(creation, list):
+            creation = creation[0]
+
+        if isinstance(expiration, list): #for lists
+            expiration = expiration[0]
+
+        age = "Unknown"
+
+        if creation:
+            now = datetime.now(timezone.utc)
+
+            if creation.tzinfo is None:
+                creation = creation.replace(tzinfo=timezone.utc)
+
+            age = (now - creation).days // 365 #calculate the age of the domain in years
+        
+        if creation:
+            creation = creation.strftime("%d-%m-%Y")
+
+        if expiration:
+            expiration = expiration.strftime("%d-%m-%Y")
+
+        return {
+            "Registrar": info.registrar,
+            "Creation Date": creation,
+            "Expiration Date": expiration,
+            "Domain Age": f"{age} years",
+            "Name Servers": info.name_servers
+        }
+        
+    except Exception as e:
+        return {
+        "WHOIS Error": str(e)
+        }
+
+
+        
