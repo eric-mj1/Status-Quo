@@ -13,11 +13,14 @@ def check_url(url):
 
 def check_website(url):
     try:
-        response = requests.get(url, timeout=5) 
+        response = requests.get(url, timeout=5)
+        content_type = response.headers.get("Content-Type", "Unknown")
+        content_type = content_type.split(";")[0]   #got rid of the charset trailing after the content type
+
         return{
             "Status Code": response.status_code,
             "Server": response.headers.get("Server", "Unknown"),
-            "Content Type": response.headers.get("Content-Type", "Unknown"),
+            "Content Type": content_type,
         }
     
     except requests.exceptions.RequestException as e:

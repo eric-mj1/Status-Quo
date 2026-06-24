@@ -1,22 +1,107 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Status Quo</title>
-</head>
-<body>
-    <h1>Status Quo</h1>
-    <form method="POST">
-        <label for="url">Enter URL:</label>
-        <input type="text" id="url" name="url" required>
-        <button type="submit">Check</button>
-    </form>
 
-    {% if result %}
-    <hr>
-    <pre>
-    {{ result }}
-    </pre>
-    {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Status Quo</h1>
+
+        <p class="subtitle">
+            Phishing Website Investigation Tool
+        </p>
+
+        <form method="POST">
+            <input type="text" name="url" placeholder="Enter website URL">
+
+            <button type="submit">Check</button>
+        </form>
+
+        {% if result %}
+
+        <div class="card">
+
+            <h2>Website Information</h2>
+
+            <table>
+
+                <tr>
+                    <td class="label">Status Code</td>
+                    <td>{{ result.Website["Status Code"] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Server</td>
+                    <td>{{ result.Website.Server }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Content Type</td>
+                    <td>{{ result.Website["Content Type"] }}</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+        <div class="card">
+
+            <h2>WHOIS Information</h2>
+
+            <table>
+
+                <tr>
+                    <td class="label">Registrar</td>
+                    <td>{{ result.WHOIS.Registrar }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Created</td>
+                    <td>{{ result.WHOIS["Creation Date"] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Expires</td>
+                    <td>{{ result.WHOIS["Expiration Date"] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Age</td>
+                    <td>{{ result.WHOIS["Domain Age"] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Name Servers</td>
+
+                    <td>
+
+                        <ul>
+
+                            {% for ns in result.WHOIS["Name Servers"] %}
+
+                            <li>{{ ns }}</li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+        {% endif %}
+
+    </div>
 
 </body>
+
 </html>
