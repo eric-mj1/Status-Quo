@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 import requests
 import whois
 from datetime import datetime, timezone
+import dns.resolver
 
 def check_url(url):
     if not url.startswith(("http://", "https://")): # for people who are lazy (like me) to add the https
@@ -68,5 +69,42 @@ def get_whois_info(domain):
         "WHOIS Error": str(e)
         }
 
+def get_dns_records(domain, record_type):
+    try:
+        answers = dns.resolver.resolve(domain, record_type)
 
+        cleaned = []
+
+        for answer in answers:
+            record = answer.to_text()
+            record = record.replace('"', '')
+            record = record.rstrip('.')
+
+            if record_type == "MX":
+                record = record.split(" ", 1)[1]
+
+            cleaned.append(record)
+        
+
+        return cleaned
+
+    except Exception:
+        return []
+    
+def get_dns_info(domain):
+
+    return {
+
+        "A Records": get_dns_records(domain, "A"),
+
+        "AAAA Records": get_dns_records(domain, "AAAA"),
+
+        "MX Records": get_dns_records(domain, "MX"),
+
+        "NS Records": get_dns_records(domain, "NS"),
+
+        "TXT Records":  [record for record in get_dns_records(domain, "TXT") if record.startswith("v=spf1")] #need only spf txt record as it shows email authentication..
+                                                                                                             #(if i added all txt records, it would be a mess)
+
+    }
         

@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from investigator import check_url, check_website, get_whois_info
+from investigator import check_url, check_website, get_whois_info, get_dns_records, get_dns_info
 
 app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
@@ -18,8 +18,10 @@ def home():
                 .split("/")[0]
             )
             whois_data = get_whois_info(domain)
-            result = {"Website": website,"WHOIS": whois_data}
-            
+            dns_data = get_dns_info(domain)
+            #print(dns_data) - used to verify if the DNS data is being retrieved correctly cause im a dumb aahhh
+            result = {"Website": website,"WHOIS": whois_data, "DNS": dns_data}
+
         else:
             result = {"Error": "Invalid URL"}
 

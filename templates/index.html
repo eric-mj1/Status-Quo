@@ -103,6 +103,78 @@
             </table>
         </div>
 
+        <div class="card">
+
+            <h2>DNS Information</h2>
+
+            <table>
+
+                <tr>
+                    <td class="label">IPv4 Address</td>
+
+                    <td>
+                        <ul>
+                            {% for record in result.DNS["A Records"] %}
+                            <li>{{ record }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+
+                {% if result.DNS["AAAA Records"] %}
+                <tr>
+                    <td class="label">IPv6 Address</td>
+
+                    <td>
+                        <ul>
+                            {% for record in result.DNS["AAAA Records"] %}
+                            <li>{{ record }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endif %}
+
+                <tr>
+                    <td class="label">NS Records</td>
+
+                    <td>
+                        <ul>
+                            {% for record in result.DNS["NS Records"] %}
+                            <li>{{ record }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="label">MX Records</td>
+
+                    <td>
+                        <ul>
+                            {% for record in result.DNS["MX Records"] %}
+                            <li>{{ record }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="label">SPF Record</td>
+
+                    <td>
+                        <ul>
+                            {% for record in result.DNS["TXT Records"] %}
+                            <li>{{ record }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
         {% endif %}
 
     </div>
