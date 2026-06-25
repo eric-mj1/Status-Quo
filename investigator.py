@@ -1,8 +1,10 @@
 from urllib.parse import urlparse
+from datetime import datetime, timezone
 import requests
 import whois
-from datetime import datetime, timezone
 import dns.resolver
+import ssl
+import socket
 
 def check_url(url):
     if not url.startswith(("http://", "https://")): # for people who are lazy (like me) to add the https
@@ -107,4 +109,47 @@ def get_dns_info(domain):
                                                                                                              #(if i added all txt records, it would be a mess)
 
     }
+
+
+def get_ssl_info(domain):
+
+    try:
+        context = ssl.create_default_context()
+        with socket.create_connection((domain, 443), timeout=5) as sock:
+            with context.wrap_socket(sock, server_hostname=domain) as secure_sock:
+                certificate = secure_sock.getpeercert()
+
+        issuer = dict(x[0] for x in certificate["issuer"])
+        subject = dict(x[0] for x in certificate["subject"])
+        issued = datetime.strptime(certificate["notBefore"], "%b %d %H:%M:%S %Y %Z")
+        issued = issued.replace(tzinfo=timezone.utc)
+        expires = datetime.strptime(certificate["notAfter"], "%b %d %H:%M:%S %Y %Z")
+        expires = expires.replace(tzinfo=timezone.utc)
+        days_left = (expires - datetime.now(timezone.utc)).days
         
+        if (days_left < 0):
+            status = "Expired"
+
+        elif (days_left <= 30):
+            status = "Expiring Soon"
+
+        else:
+            status = "Valid"
+
+        return {
+
+            "Issuer": issuer.get("organizationName", "Unknown"),
+
+            "Common Name": subject.get("commonName", "Unknown"),
+
+            "Issued On": issued.strftime("%d-%m-%Y"),
+
+            "Expires On": expires.strftime("%d-%m-%Y"),
+
+            "Days Left": f"{days_left} days",
+
+            "Certificate Status": status
+        }
+
+    except Exception as e:
+        return{"SSL Error": str(e)}
