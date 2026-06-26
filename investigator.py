@@ -153,3 +153,57 @@ def get_ssl_info(domain):
 
     except Exception as e:
         return{"SSL Error": str(e)}
+
+def get_security_headers(url):
+
+    try:
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 "
+                    "(Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 "
+                    "(KHTML, like Gecko) "
+                    "Chrome/137.0.0.0 Safari/537.36"
+                )
+            }
+        )
+
+        headers = response.headers
+        csp = (headers.get("Content-Security-Policy") or headers.get("Content-Security-Policy-Report-Only"))
+
+        if csp and len(csp) > 80:
+            csp = csp[:80] + "..."
+
+        security = {
+
+            "Strict-Transport-Security": headers.get("Strict-Transport-Security"),
+
+            "Content-Security-Policy": csp,
+
+            "X-Frame-Options": headers.get("X-Frame-Options"),
+
+            "X-Content-Type-Options": headers.get("X-Content-Type-Options"),
+
+            "Referrer-Policy": headers.get("Referrer-Policy"),
+
+            "Permissions-Policy": headers.get("Permissions-Policy"),
+
+            "Cross-Origin-Opener-Policy": headers.get("Cross-Origin-Opener-Policy"),
+
+            "Cross-Origin-Embedder-Policy": headers.get("Cross-Origin-Embedder-Policy"),
+
+            "Cross-Origin-Resource-Policy": headers.get("Cross-Origin-Resource-Policy")
+
+        }
+        #print(response.headers)
+        return security
+
+    except Exception as e:
+
+        return {
+            "Error": str(e)
+        }

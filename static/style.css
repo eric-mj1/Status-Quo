@@ -121,3 +121,17 @@ td:last-child {
     font-weight: bold;
 
 }
+
+.header-value {
+
+    margin-top: 8px;
+
+    font-size: 0.9rem;
+
+    color: #B8D6C2;
+
+    word-break: break-word;
+
+    line-height: 1.5;
+
+}

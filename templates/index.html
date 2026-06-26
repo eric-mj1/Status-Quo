@@ -238,6 +238,50 @@
 
         </div>
 
+        <div class="card">
+
+            <h2>Security Headers</h2>
+
+            <table>
+
+                {% for header, value in result.Security.items() %}
+
+                <tr>
+
+                    <td class="label">{{ header }}</td>
+
+                    <td>
+
+                        {% if value %}
+
+                        <span class="valid">
+                            🟢 Present
+                        </span>
+
+                        <div class="header-value">
+
+                            {{ value }}
+
+                        </div>
+
+                        {% else %}
+
+                        <span class="danger">
+                            🔴 Missing
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
         {% endif %}
 
     </div>
