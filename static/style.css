@@ -97,3 +97,27 @@ td:last-child {
     font-weight: 700;
     vertical-align: top;
 }
+
+.valid {
+
+    color: #6EEB83;
+
+    font-weight: bold;
+
+}
+
+.warning {
+
+    color: #FFD166;
+
+    font-weight: bold;
+
+}
+
+.danger {
+
+    color: #EF476F;
+
+    font-weight: bold;
+
+}

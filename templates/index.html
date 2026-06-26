@@ -175,6 +175,69 @@
 
         </div>
 
+        <div class="card">
+
+            <h2>SSL Certificate</h2>
+
+            <table>
+
+                <tr>
+                    <td class="label">Issuer</td>
+                    <td>{{ result.SSL["Issuer"] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Common Name</td>
+                    <td>{{ result.SSL["Common Name"] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Issued On</td>
+                    <td>{{ result.SSL["Issued On"] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Expires On</td>
+                    <td>{{ result.SSL["Expires On"] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Days Left</td>
+                    <td>{{ result.SSL["Days Left"] }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Certificate Status</td>
+                    <td>
+
+                        {% if result.SSL["Certificate Status"] == "Valid" %}
+
+                        <span class="valid">
+                            🟢 Valid
+                        </span>
+
+                        {% elif result.SSL["Certificate Status"] == "Expiring Soon" %}
+
+                        <span class="warning">
+                            🟡 Expiring Soon
+                        </span>
+
+                        {% else %}
+
+                        <span class="danger">
+                            🔴 Expired
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
         {% endif %}
 
     </div>
